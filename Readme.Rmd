@@ -1,0 +1,8 @@
+---
+title: "Readme"
+output: html_document
+---
+
+Hello, this is file is to inform you of Eric Coles' final assignment for the open data course. Here is a link to the online diary for the final assignment, https://ericcoles.github.io/IODS-final/
+
+Thank you!
