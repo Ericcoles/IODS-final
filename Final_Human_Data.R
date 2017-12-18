@@ -1,12 +1,3 @@
-Data wrangling should be done in a separate R-script and 
-included in your repository and a link to that script should be included 
-in you web page. 
-If you make changes to the data, the script should have clearly commented section(s) 
-which highlight those changes. 
-Only these will grant you points for data wrangling. 
-The data wrangling script should also include your full name, email, date and 
-a short file description and the code should be clearly commented.
-
 #Created on 16.12.2017
 #Eric Coles
 #eric.coles@helsinki.fi
@@ -49,12 +40,10 @@ gii=mutate(gii,Edu2.FM=Edu2.F/Edu2.M,Labo.FM=Labo.F/Labo.M)
 human=inner_join(hd,gii,by='Country')
 dim(human)
 summary(human)
-# Mutate the GNI data in 'human' dataset
-str(human$GNI)
-human$GNI=str_replace(human$GNI,pattern=',',replace='') %>% as.numeric
+
 
 # Dealing with not available (NA) values
-keep=c("Country", "Edu2.FM", "Labo.FM", "Life.Exp", "Edu.Exp", "GNI", "Mat.Mor", "Ado.Birth", "Parli.F")
+keep=c("Country", "Edu2.FM", "Labo.FM", "Life.Exp", "Edu.Exp", "Mat.Mor", "Ado.Birth", "Parli.F")
 human=select(human,one_of(keep))
 human=filter(human,complete.cases(human))
 
@@ -71,4 +60,5 @@ setwd('/Users/eric/Documents/GitHub/IODS-Final/')
 write.table(human,file='human.txt',row.names=T,sep = '\t')
 
 #Exlpored diminsion and structure
+dim(human)
 str(human)

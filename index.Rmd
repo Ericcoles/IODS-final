@@ -1,16 +1,171 @@
 ---
-title: "index.Rmd"
+title: "Final Open Data Assignment"
 output: html_document
+#Created on 16.12.2017
+#Eric Coles
+#eric.coles@helsinki.fi
 ---
+
+##Abstract
+High adolescent birth rates cause many problems for young mothers. My research question is what variables affect the Adolescent birth rate using the data from the UNITED NATIONS DEVELOPMENT PROGRAMME report as my dataset. Specifically looking at three different variables and their relationship with the adolescent birth rate. Adolescent birth rate and its relationship between "Parli.F" = Percetange of female representatives in parliament,"Life.Exp" = Life expectancy at birth, and"Edu.Exp" = Expected years of schooling. From the analysis, both "Life.Exp" = Life expectancy at birth and and"Edu.Exp" = Expected years of schooling had a significant relationship with the adolescent birth rate. As life expectancy at birth and expected years of schooling increased, the adolescent birth rate decreased. However the variable "Parli.F" = Percetange of female representatives in parliament, did not have a significant relationship with the adolescent birth rate and no correlation was found suggesting tha the percentage of female representives in parliament had not effect on the adolescent birth rate. The analysis of the data shows that by decreasing the adolescent birth rate, one will increase the total life expectancy at birth and expected years of schooling for the total population as well as decrease maternal mortality.  
+
 ```{r}
 library(MASS)
 library(GGally)
 library(ggplot2)
+library(dplyr)
 library(tidyr)
 library(corrplot)
+library(stringr)
 
+#Research Question
+'What variables affect the adolescent birth rate?'
 
-data("Boston")
+#Data Wrangling
+'https://github.com/Ericcoles/IODS-final/blob/master/Final_Human_Data.R'
+
+human = read.table('/Users/eric/Documents/GitHub/IODS-Final/human.txt',sep='\t',header = TRUE)
+
+str(human)
+dim(human)
 ```
-Work around charles dummy variable,
-What affect does living by the charles river have on other variables (x,y,z)?
+
+##Description of your data and its variables. 
+Original data from: http://hdr.undp.org/en/content/human-development-index-hdi
+Retrieved, modified and analyzed by Eric Coles 2017
+
+The data combines several statistical indicators from most countries in the world
+
+Modifying the column names of data
+Modifying the column names of Human Development dataset and Gender inequality data
+Calculating the ratio of female and male populations with secondary education and labour force participation in each country
+Joining the two datasets
+Dealing with not available (NA) values
+Removing observations with related to regions instead of countries
+Defining the row names of the data by the country names
+
+
+"Country" = Country name
+
+# Health and knowledge
+
+"Life.Exp" = Life expectancy at birth
+"Edu.Exp" = Expected years of schooling 
+"Mat.Mor" = Maternal mortality ratio
+"Ado.Birth" = Adolescent birth rate
+
+# Empowerment
+
+"Parli.F" = Percetange of female representatives in parliament
+"Edu2.F" = Proportion of females with at least secondary education
+"Edu2.M" = Proportion of males with at least secondary education
+"Labo.F" = Proportion of females in the labour force
+"Labo.M" " Proportion of males in the labour force
+
+"Edu2.FM" = Edu2.F / Edu2.M
+"Labo.FM" = Labo2.F / Labo2.M
+
+
+##Methods
+Exploring the human data set with a focus on the Adolescent birth rate and its relationship between "Parli.F" = Percetange of female representatives in parliament,"Life.Exp" = Life expectancy at birth, and"Edu.Exp" = Expected years of schooling. Visulization with ggplot and corrplot. Analysis with regression model and fitted regression model. Validation with The Residuals vs. Fitted plot, The Normal Q-Q Plot, and The Residuals vs. Leverage Plot.
+
+##Visualization
+
+```{r}
+human2=group_by(human,Ado.Birth)
+tab_sum=summarise(human2,count=n(),Edu.Exp=sum(Edu.Exp),Parli.F=sum(Parli.F),Life.Exp=sum(Life.Exp))
+tab_sum=mutate(tab_sum,Edu_count=Edu.Exp/count,Par_count=Parli.F/count,Life_count=Life.Exp/count)
+tab_sum
+
+Ado_Edu.Exp=ggplot(tab_sum,aes(x=Ado.Birth,y=Edu_count))+geom_bar(stat='identity'); Ado_Edu.Exp
+```
+
+From Ado_Edu: it is clear that as the number of expected years of education decreases, the adolescent birth rate increases. Between 15 and 20 years of education, the adolescent birth rate is between 0 and 50 % while below 15 years there is a greater percertage of adolescent birth rates above 50 %. 
+
+```{r}
+Ado_Parli.F=ggplot(tab_sum,aes(x=Ado.Birth,y=Par_count))+geom_bar(stat='identity'); Ado_Parli.F
+```
+
+From Par_Count: there doesn't appear to be any clear correlation to be made from the relationship between the percertage of females in parliment and the percertage of adolescent birth rate. In fact, it seems like there is no correlation at all between the two variables.
+
+```{r}
+Ado_Life.Exp=ggplot(tab_sum,aes(x=Ado.Birth,y=Life_count))+geom_bar(stat='identity'); Ado_Life.Exp
+```
+
+From Life_count: from the plot it appears that as Life_count, life expectancy at birth, increases that Ado.Birth, the adolescent birth rate, rate decreases. As life expectancy at birth decreases, the adolescent birth rate increases.
+
+The corrplot() function (from the corrplot package) is used to create a visually expressed correlation matrix. 
+
+```{r}
+cor_matrix<-cor(human) 
+
+corrplot(cor_matrix, method="circle")
+cor_matrix<-cor(human) %>% round(digits = 2)
+corrplot(cor_matrix, method="circle", type="upper", cl.pos="b", tl.pos="d", tl.cex = 0.6)
+```
+
+Positive correlations are displayed in blue and negative correlations in red color. Color intensity and the size of the circle are proportional to the correlation coefficients. In the right side of the correlogram, the legend color shows the correlation coefficients and the corresponding colors. The corrplot shows the correlations between variables of the human dataset. From the plot one can see that "Life.Exp" = Life expectancy at birth and "Edu.Exp" = Expected years of schooling, as well as "Mat.Mor" = Maternal mortality ratio and "Ado.Birth" = Adolescent birth rate have the strongest positive correlation between the variables. While "Mat.Mor" = Maternal mortality ratio  and "Life.Exp" = Life expectancy at birth has very strong negative correlation.
+
+##Analysis
+
+Here I chose three variables as explanatory variables and created a regression model where exam Ado.Birth is the target (dependent) variable. Showing a summary of the regression model, commenting and interpreting the results. As well as explaining and interpreting the statistical test related to the model parameters.
+
+
+```{r}
+regression_model <- lm(Ado.Birth ~ Life.Exp + Parli.F + Edu.Exp, data = human)
+summary(regression_model)
+```
+
+Life.Exp, Parli.F, and Edu.Exp are the independent variables in the regression model and the variable Ado.Birth is the dependent variable. A statistically significant p-value is a p-value that is less than or equal to 0.05. For determining a significant t-value, please consult a t-value table. From the low t value of 1.505 as well as the high p-value 0.134, it shows that the variables Parli.F is not statistically significant. However, it is shown from the data analysis that the relationship between Ado.Birth with Life.Exp and Edu.Exp is extremely significant. Life.Exp has a high t-value, 5.394 and a extremely significant P-value of 2.6x10^-7. Edu.Exp has a moderately high t-value of 4.109 and extremely significant P-value of 6.5x10^-5.
+
+From the analysis of the data, it shows that there is a residual error of 26.87 on 151 dgrees of freedom. Multipe R-squared value of 0.5814 and an Adjusted R-squared value of 0.5731
+
+```{r}
+regression_model_fit<- lm(Ado.Birth ~ Life.Exp + Edu.Exp, data = human)
+summary(regression_model_fit)
+```
+
+Parli.F did not have a statistically significant relationship with the dependent variable(Ado.Birth), and in this model Parli.F was removed. The Life.Exp variable had a high but lower t-value of 5.354 and an increase in significance of its p-value of to 3.12e-07. The Edu.Exp variable t-value was -3.942 and the p-value became  1.23e-4, a slighlty less significant p-value. 
+
+The analysis of the data, it shows that there is a residual error of 26.97 on 152 dgrees of freedom. From the analysis of the data it is shown that the Multiple R-squared is 0.5751 and the	Adjusted R-squared value is 0.5695.
+
+R-squared cannot be used to determine whether the coefficient estimates and predictions are biased, which is why you must assess the residual plots. [Reference](http://statisticsbyjim.com/regression/interpret-r-squared-regression/)
+
+R-squared does not indicate if a regression model provides an adequate fit to your data. A good model can have a low R2 value. On the other hand, a biased model can have a high R2 value.[Reference](http://statisticsbyjim.com/regression/interpret-r-squared-regression/)
+
+
+##Validation
+
+```{r}
+par(mfrow = c(2,2))
+plot(regression_model_fit, which = c(1, 2, 5))
+```
+
+##The Residuals vs. Fitted plot
+
+It is a scatter plot of residuals on the y axis and fitted values (estimated responses) on the x axis. The plot is used to detect non-linearity, unequal error variances, and outliers.
+
+The residuals "bounce randomly" around the 0 line. This suggests that the assumption that the relationship is linear is reasonable.
+
+The residuals roughly form a "horizontal band" around the 0 line. This suggests that the variances of the error terms are equal.
+
+Three of the residuals; Myanmar, Mali, and Niger, stand out from the basic random pattern of residuals suggesting that that they are outliers.
+
+##The Normal Q-Q Plot
+
+The quantile quantile (qq) plot is a graphical technique for determining if two data sets come from populations with a common distribution. A q-q plot is a plot of the quantiles of the first data set against the quantiles of the second data set.
+
+These two batches do appear to have come from populations with a common distribution as the majority of the values fall on the same line. This also contains the outliers Myanmar, Mali, and Niger. 
+
+##The Residuals vs. Leverage Plot
+
+An outlier is defined as an observation that has a large residual. This plot allows one to see if any outliers have a high residual value. The graph shows that all of the values have leverage less than 0.05, suggesting that this a good model. However Niger comes close to the leverage value of 0.05, suggesting that it would reasonable to exclude Niger from the data to improve the model. 
+
+
+#Conclusions and discussion (max 2 points)
+This research started off exploring the relationship between the adolescent birth rate with Life.Exp" = Life expectancy at birth, "Parli.F" = Percetange of female representatives in parliament, and"Edu.Exp" = Expected years of schooling.
+From the analysis, both "Life.Exp" = Life expectancy at birth and and"Edu.Exp" = Expected years of schooling had a significant relationship with the adolescent birth rate. As life expectancy at birth and expected years of schooling increased, the adolescent birth rate decreased. With an increase in the adolescent birth rate, causes lost educational opportunities when pregnancy forces young women to leave school.
+
+
+It is also worth noting that from the corrplot, it is shown that there is a strong positive correlation between the Maternal mortality ratio and the adolescent birth rate. This suggests that as the adolescent birth rate increases, the amount of mothers that die due to childbirth and pregnancy increases.This increase in maternal mortality would then ofcourse decrease the overall life expectancy at birth for the total population. 
+ 
