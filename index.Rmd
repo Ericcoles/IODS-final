@@ -9,6 +9,8 @@ output: html_document
 ##Abstract
 High adolescent birth rates cause many problems for young mothers. My research question is what variables affect the Adolescent birth rate using the data from the UNITED NATIONS DEVELOPMENT PROGRAMME report as my dataset. Specifically looking at three different variables and their relationship with the adolescent birth rate. Adolescent birth rate and its relationship between "Parli.F" = Percetange of female representatives in parliament,"Life.Exp" = Life expectancy at birth, and"Edu.Exp" = Expected years of schooling. From the analysis, both "Life.Exp" = Life expectancy at birth and and"Edu.Exp" = Expected years of schooling had a significant relationship with the adolescent birth rate. As life expectancy at birth and expected years of schooling increased, the adolescent birth rate decreased. However the variable "Parli.F" = Percetange of female representatives in parliament, did not have a significant relationship with the adolescent birth rate and no correlation was found suggesting tha the percentage of female representives in parliament had not effect on the adolescent birth rate. The analysis of the data shows that by decreasing the adolescent birth rate, one will increase the total life expectancy at birth and expected years of schooling for the total population as well as decrease maternal mortality.  
 
+
+#Loaded the libraries
 ```{r}
 library(MASS)
 library(GGally)
@@ -17,11 +19,14 @@ library(dplyr)
 library(tidyr)
 library(corrplot)
 library(stringr)
+```
 
 #Research Question
-'What variables affect the adolescent birth rate?'
+What variables affect the adolescent birth rate?
+
 
 #Data Wrangling
+```{r}
 'https://github.com/Ericcoles/IODS-final/blob/master/Final_Human_Data.R'
 
 human = read.table('/Users/eric/Documents/GitHub/IODS-Final/human.txt',sep='\t',header = TRUE)
@@ -29,6 +34,7 @@ human = read.table('/Users/eric/Documents/GitHub/IODS-Final/human.txt',sep='\t',
 str(human)
 dim(human)
 ```
+
 
 ##Description of your data and its variables. 
 Original data from: http://hdr.undp.org/en/content/human-development-index-hdi
@@ -162,7 +168,7 @@ These two batches do appear to have come from populations with a common distribu
 An outlier is defined as an observation that has a large residual. This plot allows one to see if any outliers have a high residual value. The graph shows that all of the values have leverage less than 0.05, suggesting that this a good model. However Niger comes close to the leverage value of 0.05, suggesting that it would reasonable to exclude Niger from the data to improve the model. 
 
 
-#Conclusions and discussion (max 2 points)
+#Conclusions and discussion 
 This research started off exploring the relationship between the adolescent birth rate with Life.Exp" = Life expectancy at birth, "Parli.F" = Percetange of female representatives in parliament, and"Edu.Exp" = Expected years of schooling.
 From the analysis, both "Life.Exp" = Life expectancy at birth and and"Edu.Exp" = Expected years of schooling had a significant relationship with the adolescent birth rate. As life expectancy at birth and expected years of schooling increased, the adolescent birth rate decreased. With an increase in the adolescent birth rate, causes lost educational opportunities when pregnancy forces young women to leave school.
 

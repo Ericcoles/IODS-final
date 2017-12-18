@@ -125,6 +125,9 @@ $(document).ready(function () {
 <div id="abstract" class="section level2">
 <h2>Abstract</h2>
 <p>High adolescent birth rates cause many problems for young mothers. My research question is what variables affect the Adolescent birth rate using the data from the UNITED NATIONS DEVELOPMENT PROGRAMME report as my dataset. Specifically looking at three different variables and their relationship with the adolescent birth rate. Adolescent birth rate and its relationship between “Parli.F” = Percetange of female representatives in parliament,“Life.Exp” = Life expectancy at birth, and“Edu.Exp” = Expected years of schooling. From the analysis, both “Life.Exp” = Life expectancy at birth and and“Edu.Exp” = Expected years of schooling had a significant relationship with the adolescent birth rate. As life expectancy at birth and expected years of schooling increased, the adolescent birth rate decreased. However the variable “Parli.F” = Percetange of female representatives in parliament, did not have a significant relationship with the adolescent birth rate and no correlation was found suggesting tha the percentage of female representives in parliament had not effect on the adolescent birth rate. The analysis of the data shows that by decreasing the adolescent birth rate, one will increase the total life expectancy at birth and expected years of schooling for the total population as well as decrease maternal mortality.</p>
+</div>
+<div id="loaded-the-libraries" class="section level1">
+<h1>Loaded the libraries</h1>
 <pre class="r"><code>library(MASS)
 library(GGally)
 library(ggplot2)
@@ -146,13 +149,15 @@ library(dplyr)</code></pre>
 <pre class="r"><code>library(tidyr)
 library(corrplot)</code></pre>
 <pre><code>## corrplot 0.84 loaded</code></pre>
-<pre class="r"><code>library(stringr)
-
-#Research Question
-'What variables affect the adolescent birth rate?'</code></pre>
-<pre><code>## [1] &quot;What variables affect the adolescent birth rate?&quot;</code></pre>
-<pre class="r"><code>#Data Wrangling
-'https://github.com/Ericcoles/IODS-final/blob/master/Final_Human_Data.R'</code></pre>
+<pre class="r"><code>library(stringr)</code></pre>
+</div>
+<div id="research-question" class="section level1">
+<h1>Research Question</h1>
+<p>What variables affect the adolescent birth rate?</p>
+</div>
+<div id="data-wrangling" class="section level1">
+<h1>Data Wrangling</h1>
+<pre class="r"><code>'https://github.com/Ericcoles/IODS-final/blob/master/Final_Human_Data.R'</code></pre>
 <pre><code>## [1] &quot;https://github.com/Ericcoles/IODS-final/blob/master/Final_Human_Data.R&quot;</code></pre>
 <pre class="r"><code>human = read.table('/Users/eric/Documents/GitHub/IODS-Final/human.txt',sep='\t',header = TRUE)
 
@@ -167,13 +172,13 @@ str(human)</code></pre>
 ##  $ Parli.F  : num  39.6 30.5 28.5 38 36.9 36.9 19.9 19.4 28.2 31.4 ...</code></pre>
 <pre class="r"><code>dim(human)</code></pre>
 <pre><code>## [1] 155   7</code></pre>
-</div>
 <div id="description-of-your-data-and-its-variables." class="section level2">
 <h2>Description of your data and its variables.</h2>
 <p>Original data from: <a href="http://hdr.undp.org/en/content/human-development-index-hdi" class="uri">http://hdr.undp.org/en/content/human-development-index-hdi</a> Retrieved, modified and analyzed by Eric Coles 2017</p>
 <p>The data combines several statistical indicators from most countries in the world</p>
 <p>Modifying the column names of data Modifying the column names of Human Development dataset and Gender inequality data Calculating the ratio of female and male populations with secondary education and labour force participation in each country Joining the two datasets Dealing with not available (NA) values Removing observations with related to regions instead of countries Defining the row names of the data by the country names</p>
 <p>“Country” = Country name</p>
+</div>
 </div>
 <div id="health-and-knowledge" class="section level1">
 <h1>Health and knowledge</h1>
@@ -302,8 +307,8 @@ plot(regression_model_fit, which = c(1, 2, 5))</code></pre>
 <p>An outlier is defined as an observation that has a large residual. This plot allows one to see if any outliers have a high residual value. The graph shows that all of the values have leverage less than 0.05, suggesting that this a good model. However Niger comes close to the leverage value of 0.05, suggesting that it would reasonable to exclude Niger from the data to improve the model.</p>
 </div>
 </div>
-<div id="conclusions-and-discussion-max-2-points" class="section level1">
-<h1>Conclusions and discussion (max 2 points)</h1>
+<div id="conclusions-and-discussion" class="section level1">
+<h1>Conclusions and discussion</h1>
 <p>This research started off exploring the relationship between the adolescent birth rate with Life.Exp&quot; = Life expectancy at birth, “Parli.F” = Percetange of female representatives in parliament, and“Edu.Exp” = Expected years of schooling. From the analysis, both “Life.Exp” = Life expectancy at birth and and“Edu.Exp” = Expected years of schooling had a significant relationship with the adolescent birth rate. As life expectancy at birth and expected years of schooling increased, the adolescent birth rate decreased. With an increase in the adolescent birth rate, causes lost educational opportunities when pregnancy forces young women to leave school.</p>
 <p>It is also worth noting that from the corrplot, it is shown that there is a strong positive correlation between the Maternal mortality ratio and the adolescent birth rate. This suggests that as the adolescent birth rate increases, the amount of mothers that die due to childbirth and pregnancy increases.This increase in maternal mortality would then ofcourse decrease the overall life expectancy at birth for the total population.</p>
 </div>
